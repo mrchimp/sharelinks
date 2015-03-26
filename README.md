@@ -12,6 +12,7 @@ Supported platforms:
  * Tumblr
  * Google+
  * LinkedIn
+ * Pinterest
 
 # Requirements #
 
@@ -57,8 +58,11 @@ By default the current page URL is used. You can use `data-url` to specify a dif
 
 ### data-title ###
 
-The title of the page being shared. By default the title of the current window is used. This is only used by LinkedIn.
+The title of the page being shared. By default the title of the current window is used. Only used by LinkedIn.
 
+### data-image ###
+
+Overrides the URL of the image to share. By default the image defined in `<meta property="og:image" content="THIS BIT HERE">` is used. If this is not defined then the URL of the first image in the page is used. Only used by Pinterest.
 
 # A note about usability #
 

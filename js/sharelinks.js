@@ -68,9 +68,9 @@
 				// Logging rather than throwing - we want other links to work even if this one doesn't
 				log("Sharelinks Error: Invalid data-platform: " + $(this).data('platform'));
 			} else {
-				dest = $(this).data('url') || window.location.href;
+				dest =  $(this).data('url')   || window.location.href;
 				title = $(this).data('title') || document.title;
-				image = findImage();
+				image = $(this).data('image') || findImage();
 
 				share_url = makeLink(platform, dest, title, image);
 
@@ -92,6 +92,9 @@
 						height = $(this).data('height') || platform.height;
 						image  = $(this).data('image')  || findImage();
 
+console.log('image', image);
+return false;
+
 						if ($(this).data('url')) {
 							href = makeLink(platform, $(this).data('url'), $(this).data('title'), image);
 						} else {
@@ -105,4 +108,3 @@
 		});
 	};
 })(jQuery);
-

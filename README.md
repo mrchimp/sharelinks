@@ -17,6 +17,13 @@ Supported platforms:
 
  * jQuery
 
+# Installation #
+
+You can install using [Bower](http://bower.io/).
+
+    bower install --save sharelinks
+
+Or just grab the js file and put it somewhere useful.
 
 # Setup #
 

@@ -8,7 +8,7 @@
 			height: 500
 		},
 		twitter: {
-			href: 'https://twitter.com/intent/tweet?url=%URL%',
+			href: 'https://twitter.com/intent/tweet?status=%TITLE%+-+%URL%',
 			width: 540,
 			height: 260
 		},

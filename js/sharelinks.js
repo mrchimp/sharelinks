@@ -77,14 +77,14 @@
 						if ($(this).data('url')) {
 							href = makeLink(platform, $(this).data('url'), $(this).data('title'));
 						} else {
-							href = $(this).data('href');
+							href = $(this).attr('href');
 						}
-						
+
 						window.open(href, '', 'status=yes, width='+width+', height='+height);
 					}
 				});
 			}
 		});
 	};
-
 })(jQuery);
+

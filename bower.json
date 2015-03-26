@@ -1,0 +1,23 @@
+{
+  "name": "sharelinks",
+  "version": "0.0.1",
+  "authors": [
+    "Mr Chimp <chimpytk@gmail.com>"
+  ],
+  "description": "Make links to share the current URL on social media sites.",
+  "keywords": [
+    "social",
+    "media",
+    "links",
+    "javascript"
+  ],
+  "license": "MIT",
+  "homepage": "github.com/mrchimp/sociallinks",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -92,9 +92,6 @@
 						height = $(this).data('height') || platform.height;
 						image  = $(this).data('image')  || findImage();
 
-console.log('image', image);
-return false;
-
 						if ($(this).data('url')) {
 							href = makeLink(platform, $(this).data('url'), $(this).data('title'), image);
 						} else {

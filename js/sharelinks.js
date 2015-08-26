@@ -17,6 +17,11 @@
 			width: 500,
 			height: 500
 		},
+		tumblrPhotos: {
+			href: 'http://www.tumblr.com/share/photos?url=%URL%',
+			width: 500,
+			height: 500
+		},
 		google: {
 			href: 'https://plus.google.com/share?url=%URL%',
 			width: 600,

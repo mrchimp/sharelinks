@@ -1,10 +1,11 @@
 {
   "name": "sharelinks",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "authors": [
     "Mr Chimp <chimpytk@gmail.com>"
   ],
   "description": "Make links to share the current URL on social media sites.",
+  "main": "js/sharelinks.js",
   "keywords": [
     "social",
     "media",

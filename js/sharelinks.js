@@ -80,7 +80,7 @@
 					// Left click only! Don't hijack middle click!
 					if (event.which == 1) {
 						e.preventDefault();
-	
+
 						var width, height, href,
 							platform = platforms[$(this).data('platform')] || false;
 

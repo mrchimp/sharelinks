@@ -1,5 +1,33 @@
 
-(function ($) {
+// Uses CommonJS, AMD or browser globals to create a jQuery plugin.
+
+(function (factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD. Register as an anonymous module.
+		define(['jquery'], factory);
+	} else if (typeof module === 'object' && module.exports) {
+		// Node/CommonJS
+		module.exports = function( root, jQuery ) {
+			if ( jQuery === undefined ) {
+				// require('jQuery') returns a factory that requires window to
+				// build a jQuery instance, we normalize how we use modules
+				// that require this pattern but the window provided is a noop
+				// if it's defined (how jquery works)
+				if ( typeof window !== 'undefined' ) {
+					jQuery = require('jquery');
+				}
+				else {
+					jQuery = require('jquery')(root);
+				}
+			}
+			factory(jQuery);
+			return jQuery;
+		};
+	} else {
+		// Browser globals
+		factory(jQuery);
+	}
+}(function ($) {
 
 	var platforms = {
 		facebook: {
@@ -37,7 +65,7 @@
 	$.fn.sharelinks = function () {
 		function makeLink(platform, url, title, image) {
 			return platform.href
-				.replace('%URL%',   encodeURIComponent(url).replace(/%20/g, '+'))
+				.replace('%URL%',	 encodeURIComponent(url).replace(/%20/g, '+'))
 				.replace('%TITLE%', encodeURIComponent(title).replace(/%20/g, '+'))
 				.replace('%IMAGE%', encodeURIComponent(image).replace(/%20/g, '+'));
 		}
@@ -68,7 +96,7 @@
 				// Logging rather than throwing - we want other links to work even if this one doesn't
 				log("Sharelinks Error: Invalid data-platform: " + $(this).data('platform'));
 			} else {
-				dest =  $(this).data('url')   || window.location.href;
+				dest =	$(this).data('url')	 || window.location.href;
 				title = $(this).data('title') || document.title;
 				image = $(this).data('image') || findImage();
 
@@ -88,9 +116,9 @@
 							throw "Sharelinks Error: Invalid data-platform: " + $(this).data('platform');
 						}
 
-						width  = $(this).data('width')  || platform.width;
+						width	= $(this).data('width')	|| platform.width;
 						height = $(this).data('height') || platform.height;
-						image  = $(this).data('image')  || findImage();
+						image	= $(this).data('image')	|| findImage();
 
 						if ($(this).data('url')) {
 							href = makeLink(platform, $(this).data('url'), $(this).data('title'), image);
@@ -104,4 +132,4 @@
 			}
 		});
 	};
-})(jQuery);
+}));

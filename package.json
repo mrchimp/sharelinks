@@ -2,12 +2,18 @@
   "name": "sharelinks",
   "version": "0.0.7",
   "repository": "git@github.com/mrchimp/sharelinks",
+  "license": "MIT",
   "devDependencies": {
+    "babelify": "^7.3.0",
     "grunt": "~0.4.1",
+    "grunt-browserify": "^5.0.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-uglify": "~0.2.2",
     "grunt-contrib-watch": "~0.4.0",
     "jshint-stylish": "^1.0.0",
     "time-grunt": "^1.0.0"
+  },
+  "browserify": {
+    "transform": [["babelify", { "presets": ["es2015"] }]]
   }
 }

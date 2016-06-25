@@ -14,6 +14,19 @@
     "time-grunt": "^1.0.0"
   },
   "browserify": {
-    "transform": [["babelify", { "presets": ["es2015"] }]]
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
+  },
+  "dependencies": {
+    "babel-preset-es2015": "^6.9.0",
+    "jquery": "^3.0.0"
   }
 }

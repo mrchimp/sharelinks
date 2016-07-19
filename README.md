@@ -24,6 +24,10 @@ You can install using [Bower](http://bower.io/).
 
     bower install --save sharelinks
 
+Or npm
+
+    npm install --save sharelinks
+
 Or just grab the js file and put it somewhere useful.
 
 # Setup #
@@ -39,6 +43,10 @@ Or just grab the js file and put it somewhere useful.
 See `index.html` for examples.
 
 You may wish to (i.e. you probably should) replace the `href` attribute with an actual URL. See below.
+
+# import/require
+
+Sharelinks has a UMD wrapper so you should be able to use `require` or `import` in a ES6/browserify/webpack/whatever type situation. However, jQuery doesn't play well with that sort of thing so good luck with that. When I figure it all out I'll leave some instructions here. Or I'll just re-write it without jQuery and then everyone will be happy.
 
 # Options #
 

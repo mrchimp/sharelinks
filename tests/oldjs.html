@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <title>sharelinks.js test page</title>
+    <meta property="og:image" content="http://example.com/og-image.jpg">
+</head>
+
+<body>
+    <p>
+        <a href="#" class="share" data-platform="facebook">Share on Facebook</a>
+    </p>
+    <p>
+        <a href="#" class="share" data-platform="twitter">Share on Twitter</a>
+    </p>
+    <p>
+        <a href="#" class="share" data-platform="tumblr">Share on Tumblr</a>
+    </p>
+    <p>
+        <a href="#" class="share" data-platform="google">Share on Google+</a>
+    </p>
+    <p>
+        <a href="#" class="share" data-platform="linkedin">Share on LinkedIn</a>
+    </p>
+    <p>
+        <a href="#" class="share" data-platform="pinterest">Share on Pinterest</a>
+    </p>
+    <p>
+        <a href="#" class="share" data-platform="this-is-wrong">Bad platform</a>
+    </p>
+    <p>
+        <a href="#" class="share" data-platform="facebook" data-url="http://example.com">Custom URL</a>
+    </p>
+    <p>
+        <a href="#" class="share" data-platform="twitter" data-width="800" data-height="800">Custom popup size</a>
+    </p>
+    <p>
+        <a href="#" class="share" data-platform="pinterest" data-image="http://example.com/test.jpg">Custom image</a>
+    </p>
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="../js/sharelinks.min.js"></script>
+    <script type="text/javascript">
+        $('.share').sharelinks();
+    </script>
+</body>
+</html>

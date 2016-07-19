@@ -1,6 +1,15 @@
 
-(function ($) {
+// Uses CommonJS, AMD or browser globals to create a jQuery plugin.
 
+(function (root, factory) {
+    if (typeof define === "function" && define.amd) {
+        define(["jquery"], factory);
+    } else if (typeof exports === "object") {
+        module.exports = factory(require("jquery"));
+    } else {
+        factory(root.jQuery);
+    }
+}(this, function ($) {
 	var platforms = {
 		facebook: {
 			href: 'https://www.facebook.com/sharer/sharer.php?u=%URL%',
@@ -37,7 +46,7 @@
 	$.fn.sharelinks = function () {
 		function makeLink(platform, url, title, image) {
 			return platform.href
-				.replace('%URL%',   encodeURIComponent(url).replace(/%20/g, '+'))
+				.replace('%URL%',	 encodeURIComponent(url).replace(/%20/g, '+'))
 				.replace('%TITLE%', encodeURIComponent(title).replace(/%20/g, '+'))
 				.replace('%IMAGE%', encodeURIComponent(image).replace(/%20/g, '+'));
 		}
@@ -68,7 +77,7 @@
 				// Logging rather than throwing - we want other links to work even if this one doesn't
 				log("Sharelinks Error: Invalid data-platform: " + $(this).data('platform'));
 			} else {
-				dest =  $(this).data('url')   || window.location.href;
+				dest =	$(this).data('url')	 || window.location.href;
 				title = $(this).data('title') || document.title;
 				image = $(this).data('image') || findImage();
 
@@ -80,7 +89,7 @@
 					// Left click only! Don't hijack middle click!
 					if (event.which == 1) {
 						e.preventDefault();
-	
+
 						var width, height, href,
 							platform = platforms[$(this).data('platform')] || false;
 
@@ -88,9 +97,9 @@
 							throw "Sharelinks Error: Invalid data-platform: " + $(this).data('platform');
 						}
 
-						width  = $(this).data('width')  || platform.width;
+						width	= $(this).data('width')	|| platform.width;
 						height = $(this).data('height') || platform.height;
-						image  = $(this).data('image')  || findImage();
+						image	= $(this).data('image')	|| findImage();
 
 						if ($(this).data('url')) {
 							href = makeLink(platform, $(this).data('url'), $(this).data('title'), image);
@@ -104,4 +113,4 @@
 			}
 		});
 	};
-})(jQuery);
+}));

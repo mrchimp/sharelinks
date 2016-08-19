@@ -79,8 +79,8 @@
 					height,
 					image,
 					href,
-					platform = platforms[e.target.dataset['platform']] || false,
-					elem = e.target;
+					elem = e.currentTarget,
+					platform = platforms[elem.dataset['platform']] || false;
 
 				if (typeof platform === 'undefined') {
 					throw "Sharelinks Error: Invalid data-platform: " + $(this).data('platform');

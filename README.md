@@ -16,7 +16,7 @@ Supported platforms:
 
 # Requirements #
 
- * jQuery
+ * None (jQuery was required before v1.0.0)
 
 # Installation #
 
@@ -32,21 +32,24 @@ Or just grab the js file and put it somewhere useful.
 
 # Setup #
 
+Some HTML:
+
     <a href="#" class="share" data-platform="twitter">Share this page on Twitter</a>
 
-    <script type="text/javascript" src="jquery.js"></script>
-    <script type="text/javascript" src="sharelinks.js"></script>
-    <script type="text/javascript">
-		$('.share').sharelinks();
-    </script>
 
-See `index.html` for examples.
+Some JS:
+
+    import 'sharelinks';
+    sharelinks('.share');
+
+
+See `tests/` for examples.
 
 You may wish to (i.e. you probably should) replace the `href` attribute with an actual URL. See below.
 
 # import/require
 
-Sharelinks has a UMD wrapper so you should be able to use `require` or `import` in a ES6/browserify/webpack/whatever type situation. However, jQuery doesn't play well with that sort of thing so good luck with that. When I figure it all out I'll leave some instructions here. Or I'll just re-write it without jQuery and then everyone will be happy.
+Sharelinks has a UMD wrapper so you should be able to use `require` or `import` in a ES6/browserify/webpack/whatever type situation. I've removed the jQuery (in v1.0.0+) dependency so it should actually work now!
 
 # Options #
 

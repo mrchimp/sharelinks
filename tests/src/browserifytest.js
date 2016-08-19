@@ -1,12 +1,3 @@
-import $ from 'jquery';
-import jQuery from 'jquery';
+var sharelinks = require('../../js/sharelinks.js');
 
-// export for others scripts to use
-window.jQuery = jQuery;
-window.$ = jQuery;
-
-import '../../js/sharelinks';
-
-$(function() {
-  $('.share').sharelinks(); // Then this works?
-});
+sharelinks('.share');

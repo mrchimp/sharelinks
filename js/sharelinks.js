@@ -1,15 +1,12 @@
-
-// Uses CommonJS, AMD or browser globals to create a jQuery plugin.
-
 (function (root, factory) {
-    if (typeof define === "function" && define.amd) {
-        define(["jquery"], factory);
-    } else if (typeof exports === "object") {
-        module.exports = factory(require("jquery"));
-    } else {
-        factory(root.jQuery);
-    }
-}(this, function ($) {
+	if (typeof define === 'function' && define.amd) {
+		define([], factory);
+	} else if (typeof module === 'object' && module.exports) {
+		module.exports = factory();
+	} else {
+		root.sharelinks = factory();
+	}
+}(this, function() {
 	var platforms = {
 		facebook: {
 			href: 'https://www.facebook.com/sharer/sharer.php?u=%URL%',
@@ -43,73 +40,85 @@
 		}
 	};
 
-	$.fn.sharelinks = function () {
+	var elements;
+
+	return function(selector) {
+		elements = document.querySelectorAll(selector);
+
 		function makeLink(platform, url, title, image) {
 			return platform.href
-				.replace('%URL%',	 encodeURIComponent(url).replace(/%20/g, '+'))
+				.replace('%URL%',   encodeURIComponent(url).replace(/%20/g, '+'))
 				.replace('%TITLE%', encodeURIComponent(title).replace(/%20/g, '+'))
 				.replace('%IMAGE%', encodeURIComponent(image).replace(/%20/g, '+'));
 		}
 
-		function log(msg) {
-			if (typeof console.error == 'function') {
-				console.error(msg);
-			} else if (typeof console.log == 'function') {
-				console.log(msg);
-			}
-		}
-
 		function findImage() {
-			var image = $('meta[property="og:image"]').attr('content');
+			var image = document.querySelector('meta[property="og:image"]').getAttribute('content');
 
 			if (!image) {
-				image = $('img').first().attr('src');
+				images = document.getElementsByTagName('img');
+
+				if (images.length > 0) {
+					image = iamges[0].getAttribute('src');
+				}
 			}
 
 			return image || '';
 		}
 
-		this.each(function () {
+		function handleClick(e) {
+			// Left click only! Don't hijack middle click!
+			if (e.which == 1) {
+				e.preventDefault();
+
+				var width,
+					height,
+					image,
+					href,
+					platform = platforms[e.target.dataset['platform']] || false,
+					elem = e.target;
+
+				if (typeof platform === 'undefined') {
+					throw "Sharelinks Error: Invalid data-platform: " + $(this).data('platform');
+				}
+
+				width  = elem.dataset.width  || platform.width;
+				height = elem.dataset.height || platform.height;
+				image  = elem.dataset.image  || findImage();
+
+				if (elem.dataset.url) {
+					href = makeLink(platform, elem.dataset.url, elem.dataset.title, image);
+				} else {
+					href = elem.getAttribute('href');
+				}
+
+				window.open(href, '', 'status=yes, width='+width+', height='+height);
+			}
+		}
+
+		elements.forEach(function (element) {
 			var share_url, dest, title, image,
-				platform = platforms[$(this).data('platform')] || false;
+			platform = platforms[element.dataset.platform] || false;
 
 			if (!platform) {
 				// Logging rather than throwing - we want other links to work even if this one doesn't
-				log("Sharelinks Error: Invalid data-platform: " + $(this).data('platform'));
+				if (typeof console.error === 'function') {
+					console.error("Sharelinks Error: Invalid data-platform: " + element.dataset.platform);
+				}
 			} else {
-				dest =	$(this).data('url')	 || window.location.href;
-				title = $(this).data('title') || document.title;
-				image = $(this).data('image') || findImage();
+				dest  = element.dataset.url   || window.location.href;
+				title = element.dataset.title || document.title;
+				image = element.dataset.image || findImage();
 
 				share_url = makeLink(platform, dest, title, image);
 
-				$(this)
-				.attr('href', share_url)
-				.on('click', function(e) {
-					// Left click only! Don't hijack middle click!
-					if (event.which == 1) {
-						e.preventDefault();
+				element.setAttribute('href', share_url)
 
-						var width, height, href,
-							platform = platforms[$(this).data('platform')] || false;
-
-						if (typeof platform === 'undefined') {
-							throw "Sharelinks Error: Invalid data-platform: " + $(this).data('platform');
-						}
-
-						width	= $(this).data('width')	|| platform.width;
-						height = $(this).data('height') || platform.height;
-						image	= $(this).data('image')	|| findImage();
-
-						if ($(this).data('url')) {
-							href = makeLink(platform, $(this).data('url'), $(this).data('title'), image);
-						} else {
-							href = $(this).attr('href');
-						}
-
-						window.open(href, '', 'status=yes, width='+width+', height='+height);
-					}
-				});
+				if (element.addEventListener) {
+					element.addEventListener('click', handleClick, false);
+				} else {
+					element.attachEvent('onclick', handleClick);
+				}
 			}
 		});
 	};

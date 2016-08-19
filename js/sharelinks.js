@@ -53,17 +53,21 @@
 		}
 
 		function findImage() {
-			var image = document.querySelector('meta[property="og:image"]').getAttribute('content');
+			var image = '';
 
-			if (!image) {
-				images = document.getElementsByTagName('img');
+			var og_image = document.querySelector('meta[property="og:image"]');
+
+			if (og_image) {
+				image = og_image.getAttribute('content');
+			} else {
+				var images = document.getElementsByTagName('img');
 
 				if (images.length > 0) {
-					image = iamges[0].getAttribute('src');
+					image = images[0].getAttribute('src');
 				}
 			}
 
-			return image || '';
+			return image;
 		}
 
 		function handleClick(e) {

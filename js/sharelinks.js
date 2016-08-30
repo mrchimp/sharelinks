@@ -80,7 +80,7 @@
 					image,
 					href,
 					elem = e.currentTarget,
-					platform = platforms[elem.dataset['platform']] || false;
+					platform = platforms[elem.dataset.platform] || false;
 
 				if (typeof platform === 'undefined') {
 					throw "Sharelinks Error: Invalid data-platform: " + $(this).data('platform');
@@ -100,7 +100,7 @@
 			}
 		}
 
-		elements.forEach(function (element) {
+		Array.prototype.forEach.call(elements, function (element) {
 			var share_url, dest, title, image,
 			platform = platforms[element.dataset.platform] || false;
 
@@ -116,7 +116,7 @@
 
 				share_url = makeLink(platform, dest, title, image);
 
-				element.setAttribute('href', share_url)
+				element.setAttribute('href', share_url);
 
 				if (element.addEventListener) {
 					element.addEventListener('click', handleClick, false);

@@ -1,3 +1,7 @@
 var sharelinks = require('../../js/sharelinks.js');
 
-sharelinks('.share');
+sharelinks('.share', {
+  onShare: function() {
+    console.log('Link shared!');
+  }
+});

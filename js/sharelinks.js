@@ -113,7 +113,10 @@
 					href = elem.getAttribute('href');
 				}
 
-				opts.onShare();
+				opts.onShare({
+					platform : elem.dataset.platform,
+					url 		 : elem.dataset.url || window.location.href
+				});
 
 				window.open(href, '', 'status=yes, width='+width+', height='+height);
 			}

@@ -100,7 +100,8 @@
 					platform = platforms[elem.dataset.platform] || false;
 
 				if (typeof platform === 'undefined') {
-					throw "Sharelinks Error: Invalid data-platform: " + $(this).data('platform');
+					// throw "Sharelinks Error: Invalid data-platform: " + $(this).data('platform');
+					throw "Sharelinks Error: Invalid data-platform: " + elem.dataset.platform;
 				}
 
 				width  = elem.dataset.width  || platform.width;

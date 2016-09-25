@@ -32,7 +32,7 @@ module.exports = function(grunt) {
 					'tests/browserifytest.js': ['tests/src/browserifytest.js']
 				},
 				options: {
-          debug: true,
+					debug: true,
 					transform: [["babelify", { "presets": ["es2015"] }]]
 				}
 			}

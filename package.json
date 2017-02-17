@@ -1,8 +1,9 @@
 {
   "name": "sharelinks",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "repository": "git@github.com/mrchimp/sharelinks",
   "license": "MIT",
+  "main": "js/sharelinks.js",
   "devDependencies": {
     "babelify": "^7.3.0",
     "babel-preset-es2015": "^6.9.0",

@@ -4,7 +4,7 @@ const path = require('path')
 module.exports = {
   entry: './Sharelinks.js',
   mode: 'production',
-  target: 'web',
+  target: 'es5',
   output: {
     filename: production ? 'Sharelinks.min.js' : 'Sharelinks.js',
     path: path.resolve(__dirname, 'dist'),

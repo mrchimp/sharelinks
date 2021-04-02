@@ -17,6 +17,6 @@
   },
   "scripts": {
     "start": "snowpack dev",
-    "build": "webpack"
+    "build": "webpack --mode production"
   }
 }

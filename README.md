@@ -2,13 +2,16 @@
 
 Turn simple `<a>` tags into share links for social media sites. Links will open a share dialog in a popup window.
 
-Roughly 2kb footprint when minimised.
+Roughly 5kb footprint when minimised.
 
 Supported platforms:
 
 - Facebook
 - Twitter
 - LinkedIn
+- Pinterest
+- Whatsapp
+- Tumblr
 
 # Requirements
 
@@ -35,7 +38,7 @@ With an event:
 
     const sharelinks = new Sharelinks('.share')
 
-    sharelinks.on('success', e => {
+    sharelinks.on('share-link-clicked', e => {
       console.log('Link Shared')
       console.info('Platform', e.platform)
       console.info('Url', e.url)
@@ -63,11 +66,15 @@ The width and height of the popup window.
 
 ### data-url
 
-By default the current page URL is used. You can use `data-url` to specify a different link to share. Useful on index/archive/category pages.
+By default the URL in the href of the link is used.
 
 ### data-title
 
 The title of the page being shared. By default the title of the current window is used. Only used by LinkedIn.
+
+### data-image
+
+Overrides the URL of the image to share. By default the image defined in `<meta property="og:image" content="THIS BIT HERE">` is used. Only used by Pinterest.
 
 # A note about usability
 

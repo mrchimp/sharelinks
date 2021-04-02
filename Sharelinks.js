@@ -16,47 +16,81 @@ function getAttributeValue (suffix, element) {
   return element.getAttribute(attribute)
 }
 
-const platforms = {
-  facebook: {
+let platforms = [
+  {
+    name: 'whatsapp',
+    href: 'whatsapp://send?text=%URL%',
+    width: null,
+    height: null,
+    sameWindow: true
+  },
+  {
+    name: 'facebook',
     href: 'https://www.facebook.com/sharer/sharer.php?u=%URL%',
     width: 400,
     height: 500
   },
-  twitter: {
-    href: 'https://twitter.com/intent/tweet?text=%TITLE%&url=%URL%',
+  {
+    name: 'twitter',
+    href: 'https://twitter.com/intent/tweet?text=%TITLE%+-+%URL%',
     width: 540,
     height: 260
   },
-  tumblr: {
+  {
+    name: 'pinterest',
+    href:
+      'http://pinterest.com/pin/create/button/?url=%URL%&description=%TITLE%&media=%IMAGE%',
+    width: 520,
+    height: 570
+  },
+  {
+    name: 'tumblr',
     href: 'http://www.tumblr.com/share/link?url=%URL%',
     width: 500,
     height: 500
   },
-  linkedin: {
-    href:
-      'http://www.linkedin.com/shareArticle?mini=true&amp;url=%URL%&amp;title=%TITLE%',
+  {
+    name: 'linkedin',
+    href: 'https://www.linkedin.com/sharing/share-offsite/?url=%URL%',
     width: 520,
     height: 570
   }
-}
+]
 
 class Sharelinks extends Emitter {
   constructor (selector, options) {
     super()
 
-    const elements = document.querySelectorAll(selector)
+    if (options && 'platforms' in options) {
+      platforms.push(...options.platforms)
+    }
+
+    console.log(platforms)
 
     this.listenClick(selector)
   }
 
-  makeLink (platform, url, title) {
+  makeLink (platform, url, title, image) {
     return platform.href
       .replace('%URL%', encodeURIComponent(url).replace(/%20/g, '+'))
       .replace('%TITLE%', encodeURIComponent(title).replace(/%20/g, '+'))
+      .replace('%IMAGE%', encodeURIComponent(image).replace(/%20/g, '+'))
   }
 
   listenClick (selector) {
     this.listener = listen(selector, 'click', e => this.onClick(e))
+  }
+
+  image (elem) {
+    if (getAttributeValue('image', elem)) {
+      return getAttributeValue('image', elem)
+    }
+
+    let ogImage = document.querySelector('meta[property="og:image"]')
+
+    if (ogImage) {
+      return ogImage.getAttribute('content')
+    }
   }
 
   onClick (e) {
@@ -65,35 +99,42 @@ class Sharelinks extends Emitter {
       e.preventDefault()
 
       const elem = e.target,
-        platform = platforms[elem.dataset.platform],
-        url = elem.getAttribute('href'),
-        width = getAttributeValue('width', elem) || platform.width,
-        height = getAttributeValue('height', elem) || platform.height
-
-      let href
+        platform = platforms.find(platform => {
+          return platform.name === elem.dataset.platform
+        }),
+        url = elem.getAttribute('href') || window.location.href
 
       if (typeof platform === 'undefined') {
-        // throw "Sharelinks Error: Invalid data-platform: " + $(this).data('platform');
         throw 'Sharelinks Error: Invalid data-platform: ' +
           getAttributeValue('platform', elem)
       }
 
-      if (url) {
-        href = this.makeLink(
-          platform,
-          getAttributeValue('url', elem) || window.location.href,
-          getAttributeValue('title', elem) || document.title
-        )
-      } else {
-        href = elem.getAttribute('href')
-      }
+      const width = getAttributeValue('width', elem) || platform.width,
+        height = getAttributeValue('height', elem) || platform.height
 
-      this.emit('success', {
+      // Generate platform link
+      const href = this.makeLink(
+        platform,
+        url,
+        getAttributeValue('title', elem) || document.title,
+        this.image(elem)
+      )
+
+      this.emit('share-link-clicked', {
         platform: elem.dataset.platform,
         url: getAttributeValue('url', elem) || window.location.href
       })
 
-      window.open(href, '', 'status=yes, width=' + width + ', height=' + height)
+      if ('sameWindow' in platform && platform.sameWindow) {
+        window.location.href = href // Same window
+      } else {
+        window.open(
+          // New window
+          href,
+          '',
+          'status=yes, width=' + width + ', height=' + height
+        )
+      }
     }
   }
 }

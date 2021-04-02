@@ -65,8 +65,6 @@ class Sharelinks extends Emitter {
       platforms.push(...options.platforms)
     }
 
-    console.log(platforms)
-
     this.listenClick(selector)
   }
 
@@ -81,12 +79,12 @@ class Sharelinks extends Emitter {
     this.listener = listen(selector, 'click', e => this.onClick(e))
   }
 
-  image (elem) {
+  findImage (elem) {
     if (getAttributeValue('image', elem)) {
       return getAttributeValue('image', elem)
     }
 
-    let ogImage = document.querySelector('meta[property="og:image"]')
+    const ogImage = document.querySelector('meta[property="og:image"]')
 
     if (ogImage) {
       return ogImage.getAttribute('content')
@@ -110,15 +108,13 @@ class Sharelinks extends Emitter {
       }
 
       const width = getAttributeValue('width', elem) || platform.width,
-        height = getAttributeValue('height', elem) || platform.height
-
-      // Generate platform link
-      const href = this.makeLink(
-        platform,
-        url,
-        getAttributeValue('title', elem) || document.title,
-        this.image(elem)
-      )
+        height = getAttributeValue('height', elem) || platform.height,
+        href = this.makeLink(
+          platform,
+          url,
+          getAttributeValue('title', elem) || document.title,
+          this.findImage(elem)
+        )
 
       this.emit('share-link-clicked', {
         platform: elem.dataset.platform,

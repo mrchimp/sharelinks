@@ -2,15 +2,18 @@
  * Helper function to retrieve attribute value.
  * @param {String} suffix
  * @param {Element} element
+ * @param {String} default_val
  */
-function getAttributeValue(suffix, element) {
-  const attribute = `data-${suffix}`;
-
-  if (!element.hasAttribute(attribute)) {
-    return;
+function dataAttr(suffix, element, default_val) {
+  if (typeof element.dataset[suffix] === 'undefined') {
+    return default_val;
   }
 
-  return element.getAttribute(attribute);
+  return element.dataset[suffix];
+}
+
+function urlify(value) {
+  return encodeURIComponent(value).replaceAll(/%20/g, '+');
 }
 
 let platforms = [
@@ -55,30 +58,27 @@ let platforms = [
 ];
 
 class Sharelinks {
-  constructor(selector, options) {
-    if (options && 'platforms' in options) {
-      platforms.push(...options.platforms);
-    }
+  constructor(selector, options = {}) {
+    platforms.push(...(options.platforms ?? []));
 
-    this.listenClick(selector);
+    this.options = options;
+
+    // Listen for clicks
+    document.querySelectorAll(selector).forEach((link) => {
+      link.addEventListener('click', this.onClick.bind(this));
+    });
   }
 
   makeLink(platform, url, title, image) {
     return platform.href
-      .replace('%URL%', encodeURIComponent(url).replace(/%20/g, '+'))
-      .replace('%TITLE%', encodeURIComponent(title).replace(/%20/g, '+'))
-      .replace('%IMAGE%', encodeURIComponent(image).replace(/%20/g, '+'));
-  }
-
-  listenClick(selector) {
-    document.querySelectorAll(selector).forEach((link) => {
-      link.addEventListener('click', this.onClick);
-    });
+      .replaceAll('%URL%', urlify(url))
+      .replaceAll('%TITLE%', urlify(title))
+      .replaceAll('%IMAGE%', urlify(image));
   }
 
   findImage(elem) {
-    if (getAttributeValue('image', elem)) {
-      return getAttributeValue('image', elem);
+    if (dataAttr('image', elem)) {
+      return dataAttr('image', elem);
     }
 
     const ogImage = document.querySelector('meta[property="og:image"]');
@@ -90,49 +90,51 @@ class Sharelinks {
 
   onClick(e) {
     // Left click only! Don't hijack middle click!
-    if (e.which == 1) {
-      e.preventDefault();
+    if (e.which !== 1) {
+      return;
+    }
 
-      const elem = e.target;
-      const platform = platforms.find((platform) => {
-        return platform.name === elem.dataset.platform;
-      });
-      const url = elem.getAttribute('href') || window.location.href;
+    e.preventDefault();
 
-      if (typeof platform === 'undefined') {
-        throw (
-          'Sharelinks Error: Invalid data-platform: ' +
-          getAttributeValue('platform', elem)
-        );
-      }
+    const elem = e.target;
+    const platform = platforms.find((platform) => {
+      return platform.name === dataAttr('platform', elem);
+    });
 
-      const width = getAttributeValue('width', elem) || platform.width;
-      const height = getAttributeValue('height', elem) || platform.height;
-      const href = this.makeLink(
-        platform,
-        url,
-        getAttributeValue('title', elem) || document.title,
-        this.findImage(elem)
+    if (typeof platform === 'undefined') {
+      throw (
+        'Sharelinks Error: Invalid data-platform: ' + dataAttr('platform', elem)
       );
-      const event = new CustomEvent('share-link-clicked', {
-        detail: {
-          platform: elem.dataset.platform,
-          url: getAttributeValue('url', elem) || window.location.href
-        }
+    }
+
+    const url = dataAttr('url', elem, window.location.href);
+    const width = dataAttr('width', elem, platform.width);
+    const height = dataAttr('height', elem, platform.height);
+    const href = this.makeLink(
+      platform,
+      url,
+      dataAttr('title', elem, document.title),
+      this.findImage(elem)
+    );
+
+    if (typeof this.options.callback === 'function') {
+      this.options.callback({
+        platform: elem.dataset.platform,
+        url: url
       });
+    }
 
-      elem.dispatchEvent(event);
-
-      if ('sameWindow' in platform && platform.sameWindow) {
-        window.location.href = href; // Same window
-      } else {
-        window.open(
-          // New window
-          href,
-          '',
-          'status=yes, width=' + width + ', height=' + height
-        );
-      }
+    if (platform.sameWindow) {
+      window.location.href = href;
+    } else {
+      const new_window = window.open(
+        href,
+        '',
+        'status=yes, width=' + width + ', height=' + height
+      );
+      // Prevent referer bug.
+      // See https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
+      new_window.opener = null;
     }
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "sharelinks",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "repository": "git@github.com/mrchimp/sharelinks",
   "license": "MIT",
   "main": "dist/Sharelinks.js",

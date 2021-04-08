@@ -2,7 +2,7 @@
 
 Turn simple `<a>` tags into share links for social media sites. Links will open a share dialog in a popup window.
 
-Roughly 2.1kb footprint when minimised.
+Roughly 1.9kb footprint when minimised.
 
 Supported platforms:
 
@@ -38,18 +38,29 @@ import Sharelinks from 'sharelinks';
 new Sharelinks('.share');
 ```
 
-With an event:
+Provide a callback for when a link is clicked:
 
 ```javascript
-import Sharelinks from './Sharelinks.js';
+const sharelinks = new Sharelinks('.share', {
+    callback: e => {
+        console.log('Link Shared');
+        console.info('Platform', e.platform);
+        console.info('Url', e.url);
+    }
+);
+```
 
-const sharelinks = new Sharelinks('.share');
+Add a custom platform
 
-sharelinks.on('share-link-clicked', e => {
-    console.log('Link Shared');
-    console.info('Platform', e.platform);
-    console.info('Url', e.url);
-});
+```javascript
+const sharelinks = new Sharelinks('.share', {
+    platforms: [
+        name: 'mycustomsite',
+        href: 'https://example.com/share?u=%URL%&title=%TITLE%&image=%IMAGE%',
+        width: 400,
+        height: 500,
+    ],
+};
 ```
 
 See `index.html` for examples.
@@ -84,9 +95,9 @@ The title of the page being shared. By default the title of the current window i
 
 Overrides the URL of the image to share. By default the image defined in `<meta property="og:image" content="THIS BIT HERE">` is used. Only used by Pinterest.
 
-# A note about usability
+# A note about accessibility
 
-To increase usability, Sharelinks will replace the `href` attribute of the selected links so that opening links in a new window will work. However If you want the links to work without javascript then you should manually populate the `href` attribute. You can find the URLs easily at the top of Sharelinks.js - just replace `%URL%` and `%TITLE%` with url-encoded versions of the url and title of the page you wish to share.
+To increase accessibility, Sharelinks will replace the `href` attribute of the selected links so that opening links in a new window will work. However If you want the links to work without javascript then you should manually populate the `href` attribute. You can find the URLs easily at the top of Sharelinks.js - just replace `%URL%` and `%TITLE%` with url-encoded versions of the url and title of the page you wish to share.
 
 # Development
 

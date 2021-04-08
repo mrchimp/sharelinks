@@ -1,26 +1,20 @@
 import Sharelinks from './Sharelinks.js';
 
-// const sharelinks = new Sharelinks('.share', {
-//   // Add extra plaform.
-//   platforms: [
-//     {
-//       name: 'whatsapp',
-//       href: 'whatsapp://send?text=%URL%',
-//       width: null,
-//       height: null,
-//       sameWindow: true
-//     }
-//   ]
-// })
+new Sharelinks('.share', {
+  // Add an extra platform
+  platforms: [
+    {
+      name: 'my-custom-platform',
+      href: 'https://example.com/share?u=%URL%&title=%TITLE%&image=%IMAGE%',
+      width: 400,
+      height: 500
+    }
+  ],
 
-new Sharelinks('.share');
-
-const links = document.querySelectorAll('.share');
-
-links.forEach((item) => {
-  item.addEventListener('share-link-clicked', (e) => {
+  // Define a callback for when a link is clicked
+  callback: (e) => {
     console.log('Link Shared!');
-    console.info('Platform', e.detail.platform);
-    console.info('Url', e.detail.url);
-  });
+    console.info('Platform', e.platform);
+    console.info('Url', e.url);
+  }
 });

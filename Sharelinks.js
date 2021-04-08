@@ -1,6 +1,3 @@
-import Emitter from "tiny-emitter";
-import listen from "good-listener";
-
 /**
  * Helper function to retrieve attribute value.
  * @param {String} suffix
@@ -18,50 +15,47 @@ function getAttributeValue (suffix, element) {
 
 let platforms = [
   {
-    name: "whatsapp",
-    href: "whatsapp://send?text=%URL%",
+    name: 'whatsapp',
+    href: 'whatsapp://send?text=%URL%',
     width: null,
     height: null,
-    sameWindow: true
+    sameWindow: true,
   },
   {
-    name: "facebook",
-    href: "https://www.facebook.com/sharer/sharer.php?u=%URL%",
+    name: 'facebook',
+    href: 'https://www.facebook.com/sharer/sharer.php?u=%URL%',
     width: 400,
-    height: 500
+    height: 500,
   },
   {
-    name: "twitter",
-    href: "https://twitter.com/intent/tweet?text=%TITLE%+-+%URL%",
+    name: 'twitter',
+    href: 'https://twitter.com/intent/tweet?text=%TITLE%+-+%URL%',
     width: 540,
-    height: 260
+    height: 260,
   },
   {
-    name: "pinterest",
-    href:
-      "http://pinterest.com/pin/create/button/?url=%URL%&description=%TITLE%&media=%IMAGE%",
+    name: 'pinterest',
+    href: 'http://pinterest.com/pin/create/button/?url=%URL%&description=%TITLE%&media=%IMAGE%',
     width: 520,
-    height: 570
+    height: 570,
   },
   {
-    name: "tumblr",
-    href: "http://www.tumblr.com/share/link?url=%URL%",
+    name: 'tumblr',
+    href: 'http://www.tumblr.com/share/link?url=%URL%',
     width: 500,
-    height: 500
+    height: 500,
   },
   {
-    name: "linkedin",
-    href: "https://www.linkedin.com/sharing/share-offsite/?url=%URL%",
+    name: 'linkedin',
+    href: 'https://www.linkedin.com/sharing/share-offsite/?url=%URL%',
     width: 520,
-    height: 570
-  }
+    height: 570,
+  },
 ];
 
-class Sharelinks extends Emitter {
+class Sharelinks {
   constructor (selector, options) {
-    super();
-
-    if (options && "platforms" in options) {
+    if (options && 'platforms' in options) {
       platforms.push(...options.platforms);
     }
 
@@ -70,24 +64,28 @@ class Sharelinks extends Emitter {
 
   makeLink (platform, url, title, image) {
     return platform.href
-      .replace("%URL%", encodeURIComponent(url).replace(/%20/g, "+"))
-      .replace("%TITLE%", encodeURIComponent(title).replace(/%20/g, "+"))
-      .replace("%IMAGE%", encodeURIComponent(image).replace(/%20/g, "+"));
+      .replace('%URL%', encodeURIComponent(url).replace(/%20/g, '+'))
+      .replace('%TITLE%', encodeURIComponent(title).replace(/%20/g, '+'))
+      .replace('%IMAGE%', encodeURIComponent(image).replace(/%20/g, '+'));
   }
 
   listenClick (selector) {
-    this.listener = listen(selector, "click", (e) => this.onClick(e));
+    document.querySelectorAll(selector).forEach((link) => {
+      link.addEventListener('click', (e) => {
+        this.onClick(e);
+      });
+    });
   }
 
   findImage (elem) {
-    if (getAttributeValue("image", elem)) {
-      return getAttributeValue("image", elem);
+    if (getAttributeValue('image', elem)) {
+      return getAttributeValue('image', elem);
     }
 
     const ogImage = document.querySelector('meta[property="og:image"]');
 
     if (ogImage) {
-      return ogImage.getAttribute("content");
+      return ogImage.getAttribute('content');
     }
   }
 
@@ -100,35 +98,38 @@ class Sharelinks extends Emitter {
         platform = platforms.find((platform) => {
           return platform.name === elem.dataset.platform;
         }),
-        url = elem.getAttribute("href") || window.location.href;
+        url = elem.getAttribute('href') || window.location.href;
 
-      if (typeof platform === "undefined") {
-        throw "Sharelinks Error: Invalid data-platform: " +
-          getAttributeValue("platform", elem);
+      if (typeof platform === 'undefined') {
+        throw 'Sharelinks Error: Invalid data-platform: ' + getAttributeValue('platform', elem);
       }
 
-      const width = getAttributeValue("width", elem) || platform.width,
-        height = getAttributeValue("height", elem) || platform.height,
+      const width = getAttributeValue('width', elem) || platform.width,
+        height = getAttributeValue('height', elem) || platform.height,
         href = this.makeLink(
           platform,
           url,
-          getAttributeValue("title", elem) || document.title,
+          getAttributeValue('title', elem) || document.title,
           this.findImage(elem)
         );
 
-      this.emit("share-link-clicked", {
-        platform: elem.dataset.platform,
-        url: getAttributeValue("url", elem) || window.location.href
+      const event = new CustomEvent('share-link-clicked', {
+        detail: {
+          platform: elem.dataset.platform,
+          url: getAttributeValue('url', elem) || window.location.href,
+        },
       });
 
-      if ("sameWindow" in platform && platform.sameWindow) {
+      elem.dispatchEvent(event);
+
+      if ('sameWindow' in platform && platform.sameWindow) {
         window.location.href = href; // Same window
       } else {
         window.open(
           // New window
           href,
-          "",
-          "status=yes, width=" + width + ", height=" + height
+          '',
+          'status=yes, width=' + width + ', height=' + height
         );
       }
     }

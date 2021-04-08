@@ -19,30 +19,38 @@ Supported platforms:
 
 # Installation
 
-    npm install --save sharelinks
+```bash
+npm install --save sharelinks
+```
 
 # Setup
 
 Some HTML:
 
-    <a href="#" class="share" data-platform="twitter">Share this page on Twitter</a>
+```html
+<a href="#" class="share" data-platform="twitter">Share this page on Twitter</a>
+```
 
 Some JS:
 
-    import Sharelinks from 'sharelinks';
-    new Sharelinks('.share');
+```javascript
+import Sharelinks from 'sharelinks';
+new Sharelinks('.share');
+```
 
 With an event:
 
-    import Sharelinks from './Sharelinks.js'
+```javascript
+import Sharelinks from './Sharelinks.js';
 
-    const sharelinks = new Sharelinks('.share')
+const sharelinks = new Sharelinks('.share');
 
-    sharelinks.on('share-link-clicked', e => {
-      console.log('Link Shared')
-      console.info('Platform', e.platform)
-      console.info('Url', e.url)
-    })
+sharelinks.on('share-link-clicked', e => {
+    console.log('Link Shared');
+    console.info('Platform', e.platform);
+    console.info('Url', e.url);
+});
+```
 
 See `index.html` for examples.
 
@@ -58,7 +66,7 @@ Are options are set per-link by using data attributes. Available options are as 
 
 ### data-platform (required)
 
-The social media platform to share on. Available options are: `facebook`, `twitter`, `linkedin`.
+The social media platform to share on. Available options are: `facebook`, `twitter`, `linkedin`, `whatsapp`, `tumblr`.
 
 ### data-height and data-width
 
@@ -82,4 +90,20 @@ To increase usability, Sharelinks will replace the `href` attribute of the selec
 
 # Development
 
-Run `npm install` to get the things you need. Then run `npm run start` to run the tasks automatically as you work. For more info...I dunno. Read a book or something. I can't teach you everything.
+Install dependencies
+
+```bash
+npm install
+```
+
+Compile automatically as you work
+
+```bash
+npm run start
+```
+
+Build for production
+
+```bash
+npm run build
+```

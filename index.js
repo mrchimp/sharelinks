@@ -1,4 +1,4 @@
-import Sharelinks from './Sharelinks.js'
+import Sharelinks from './Sharelinks.js';
 
 // const sharelinks = new Sharelinks('.share', {
 //   // Add extra plaform.
@@ -13,10 +13,14 @@ import Sharelinks from './Sharelinks.js'
 //   ]
 // })
 
-const sharelinks = new Sharelinks('.share')
+new Sharelinks('.share');
 
-sharelinks.on('share-link-clicked', e => {
-  console.log('Link Shared!')
-  console.info('Platform', e.platform)
-  console.info('Url', e.url)
-})
+const links = document.querySelectorAll('.share');
+
+links.forEach((item) => {
+  item.addEventListener('share-link-clicked', (e) => {
+    console.log('Link Shared!');
+    console.info('Platform', e.detail.platform);
+    console.info('Url', e.detail.url);
+  });
+});

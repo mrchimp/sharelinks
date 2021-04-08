@@ -2,7 +2,7 @@
 
 Turn simple `<a>` tags into share links for social media sites. Links will open a share dialog in a popup window.
 
-Roughly 5kb footprint when minimised.
+Roughly 2.1kb footprint when minimised.
 
 Supported platforms:
 

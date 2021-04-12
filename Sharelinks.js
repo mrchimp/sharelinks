@@ -96,7 +96,7 @@ class Sharelinks {
 
     e.preventDefault();
 
-    const elem = e.target;
+    const elem = e.currentTarget;
     const platform = platforms.find((platform) => {
       return platform.name === dataAttr('platform', elem);
     });
